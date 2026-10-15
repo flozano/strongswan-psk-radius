@@ -1,0 +1,26 @@
+# FreeRADIUS 3: a virtual server answering the plugin's lookups from the users
+# file (mods-config/files/authorize). It only listens on localhost.
+#
+#   cp sites-available-psk /etc/raddb/sites-available/psk
+#   ln -s ../sites-available/psk /etc/raddb/sites-enabled/psk
+#
+# and set the plugin's secret in clients.conf for 127.0.0.1.
+server psk {
+	listen {
+		type = auth
+		ipaddr = 127.0.0.1
+		port = 1812
+	}
+
+	authorize {
+		# Only answer key lookups, never password logins. A missing
+		# Service-Type must be rejected too: "!=" is false when it is absent.
+		if (!&Service-Type || &Service-Type != Authorize-Only) {
+			reject
+		}
+		files
+	}
+
+	authenticate {
+	}
+}

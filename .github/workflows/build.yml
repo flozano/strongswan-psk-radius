@@ -1,0 +1,59 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      strongswan:
+        description: EPEL strongswan version-release to build against (default: current)
+        required: false
+
+jobs:
+  rpm:
+    name: RPM (EL9, EPEL strongSwan)
+    runs-on: ubuntu-latest
+    container: docker.io/library/almalinux:9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: contrib/build-rpm.sh ${{ inputs.strongswan }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rpm-el9
+          path: out/
+
+  test:
+    name: Integration test
+    needs: rpm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: rpm-el9
+          path: out/
+      - name: Run
+        run: test/run.sh
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [rpm, test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: rpm-el9
+          path: out/
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" out/*.rpm \
+            --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" \
+            --notes "Built against $(cat out/BUILT_AGAINST) from EPEL 9."

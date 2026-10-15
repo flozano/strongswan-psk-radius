@@ -1,0 +1,16 @@
+# FreeRADIUS users file entries (mods-config/files/authorize).
+#
+# User-Name is the peer's IKE identity. Auth-Type := Accept answers the
+# Authorize-Only lookup without a password, so the Service-Type check item
+# keeps these entries from accepting anything else. FreeRADIUS encrypts
+# Tunnel-Password with the client's secret.
+
+site-1.example.com	Service-Type == Authorize-Only, Auth-Type := Accept
+	Tunnel-Password = "use-a-long-random-key-per-peer-1",
+	Framed-IP-Address = 10.10.0.10,
+	MS-Primary-DNS-Server = 10.10.0.1
+
+site-2@example.com	Service-Type == Authorize-Only, Auth-Type := Accept
+	Tunnel-Password = "use-a-long-random-key-per-peer-2",
+	Framed-IP-Address = 10.10.0.11,
+	Framed-IPv6-Address = 2001:db8::11
