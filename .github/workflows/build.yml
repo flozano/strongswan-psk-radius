@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       strongswan:
-        description: EPEL strongswan version-release to build against (default: current)
+        description: "EPEL strongswan version-release to build against (default: current)"
         required: false
 
 jobs:
