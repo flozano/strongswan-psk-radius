@@ -6,7 +6,7 @@
 # strongSwan it was built against, which also refuses any other build.
 
 Name:           strongswan-psk-radius
-Version:        0.1.0
+Version:        0.1.1
 Release:        1.strongswan%{strongswan_ver}%{?dist}
 Summary:        strongSwan plugin that looks up IKE pre-shared keys and virtual IPs in RADIUS
 License:        GPL-2.0-or-later

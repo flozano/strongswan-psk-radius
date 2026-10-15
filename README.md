@@ -65,6 +65,26 @@ This builds EPEL's strongSwan source package in an AlmaLinux 9 container
 requires exactly the strongswan package it was built against. CI builds the
 same RPM, runs the integration test and attaches the RPM to tagged releases.
 
+### Verifying release packages
+
+Release RPMs (from 0.1.1) are signed with this key, which is in the
+repository as [`RPM-GPG-KEY-strongswan-psk-radius`](RPM-GPG-KEY-strongswan-psk-radius):
+
+    strongswan-psk-radius release signing <flozano@gmail.com>
+    2B91 F35F 9491 3034 0F11  A9E8 0298 6632 30F9 7EEE
+
+Check the fingerprint with `gpg --show-keys RPM-GPG-KEY-strongswan-psk-radius`,
+then:
+
+    sudo rpm --import RPM-GPG-KEY-strongswan-psk-radius
+    rpm -K strongswan-psk-radius-*.rpm      # digests signatures OK
+
+Each release also has a build provenance attestation, which shows the RPM was
+built by this repository's workflow from the tagged commit:
+
+    gh attestation verify strongswan-psk-radius-0.1.1-1.strongswan6.0.6.el9.x86_64.rpm \
+        --repo flozano/strongswan-psk-radius
+
 ### Any other strongSwan
 
 Configure and build the strongSwan source of the version you run, with the
