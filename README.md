@@ -118,7 +118,7 @@ are installed: `/usr/lib/ipsec` upstream and on Debian/Ubuntu,
 | `source` | | source address for requests |
 | `nas_identifier` | `strongSwan` | `NAS-Identifier` |
 | `sockets` | `1` | sockets, i.e. parallel requests, per server |
-| `retransmit_tries` | `3` | retransmissions per request |
+| `retransmit_tries` | `3` | attempts per request, including the first |
 | `retransmit_timeout` | `1.0` | retransmission timeout in seconds |
 | `retransmit_base` | `1.4` | base of the exponential backoff |
 | `identities` | all | comma-separated identity patterns to look up, e.g. `*@example.com, *.sites.example.com` |
